@@ -4,6 +4,12 @@ Minimal RSS/Atom reader for the Mudita Kompakt (e-ink), built with the Mudita Mi
 
 Feeds are fetched and parsed with [RSS-Parser](https://github.com/prof18/RSS-Parser); article HTML is flattened to plain text.
 
+<p align="center">
+  <img src="docs/feeds.png" width="30%" alt="Subscribed feeds">
+  <img src="docs/articles.png" width="30%" alt="Article list">
+  <img src="docs/article.png" width="30%" alt="Article as plain text">
+</p>
+
 ## Install
 
 ```
