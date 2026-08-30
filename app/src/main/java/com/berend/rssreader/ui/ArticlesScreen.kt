@@ -71,13 +71,22 @@ fun ArticlesScreen(
                 .verticalScroll(rememberScrollState()),
         ) {
             viewModel.articles.forEachIndexed { index, article ->
+                val read = viewModel.isRead(article)
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { onOpenArticle(article) }
+                        .clickable {
+                            viewModel.markRead(article)
+                            onOpenArticle(article)
+                        }
                         .padding(vertical = 12.dp),
                 ) {
-                    TextMMD(article.title, fontSize = 17.sp, fontWeight = FontWeight.Medium)
+                    TextMMD(
+                        text = article.title,
+                        fontSize = 17.sp,
+                        // Unread stands out in bold; read settles back to regular weight
+                        fontWeight = if (read) FontWeight.Normal else FontWeight.Bold,
+                    )
                     if (article.date.isNotBlank()) {
                         Spacer(modifier = Modifier.height(2.dp))
                         TextMMD(article.date, fontSize = 12.sp)

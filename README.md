@@ -19,7 +19,7 @@ Feeds are fetched and parsed with [RSS-Parser](https://github.com/prof18/RSS-Par
 ## How it works
 
 - Add a feed by URL on the main screen; the app fetches it once to read its title.
-- Tap a feed to see its articles, tap an article to read it as text.
+- Tap a feed to see its articles (unread in bold, read in regular weight), tap an article to read it as text.
 - Article HTML is flattened with `HtmlCompat.fromHtml`, so formatting and images are dropped by design.
 - Feeds that only publish summaries (not full text) will show just the summary; feeds with `content:encoded` read in full.
 
@@ -32,7 +32,9 @@ Feeds are fetched and parsed with [RSS-Parser](https://github.com/prof18/RSS-Par
 
 ## Notes
 
-- No offline cache or read/unread state yet; feeds are re-fetched when opened.
+- Read/unread is tracked locally by article id (persisted); opening an article marks it read.
+- No offline cache yet; feeds are re-fetched when opened.
+- Requests use a browser-like User-Agent, since some servers reject the default OkHttp one.
 - Pinned to RSS-Parser 6.0.6, the last release built with Kotlin 1.9 (matching MMD's toolchain).
 
 ## License

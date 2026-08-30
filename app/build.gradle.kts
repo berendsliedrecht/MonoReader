@@ -11,8 +11,8 @@ android {
         applicationId = "com.berend.rssreader"
         minSdk = 28
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.1.1"
     }
 
     buildTypes {
@@ -58,6 +58,7 @@ dependencies {
     // 6.0.6 is the last release built with Kotlin 1.9; 6.0.9+ moved to Kotlin 2.1
     // whose metadata this project's Kotlin 1.9.10 compiler cannot read.
     implementation("com.prof18.rssparser:rssparser:6.0.6")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     val composeBom = platform("androidx.compose:compose-bom:2024.06.00")
     implementation(composeBom)

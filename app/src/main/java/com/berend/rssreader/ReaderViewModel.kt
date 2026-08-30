@@ -9,20 +9,34 @@ import androidx.core.text.HtmlCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
-import com.prof18.rssparser.RssParser
+import com.google.gson.reflect.TypeToken
+import com.prof18.rssparser.RssParserBuilder
 import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
 
 /** A subscribed feed. Title is filled in from the feed itself; url is the key. */
 data class Feed(val url: String, val title: String)
 
-/** A display-ready article: HTML already flattened to plain text. */
-data class Article(val title: String, val date: String, val body: String)
+/** A display-ready article: HTML already flattened to plain text. id is stable across refetches. */
+data class Article(val id: String, val title: String, val date: String, val body: String)
 
 class ReaderViewModel(application: Application) : AndroidViewModel(application) {
 
     private val prefs = application.getSharedPreferences("reader", Context.MODE_PRIVATE)
     private val gson = Gson()
-    private val parser = RssParser()
+
+    // Some servers reject OkHttp's default User-Agent; present as a normal browser.
+    private val parser = RssParserBuilder(
+        callFactory = OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                chain.proceed(
+                    chain.request().newBuilder()
+                        .header("User-Agent", "Mozilla/5.0 (Android) Reader/0.1 (+github.com/berendsliedrecht/eink-rssreader)")
+                        .build(),
+                )
+            }
+            .build(),
+    ).build()
 
     var feeds by mutableStateOf<List<Feed>>(emptyList()); private set
     var addError by mutableStateOf<String?>(null); private set
@@ -33,10 +47,24 @@ class ReaderViewModel(application: Application) : AndroidViewModel(application) 
     var isLoading by mutableStateOf(false); private set
     var loadError by mutableStateOf<String?>(null); private set
 
+    private var readIds by mutableStateOf<Set<String>>(emptySet())
+
     init {
         feeds = runCatching {
             gson.fromJson(prefs.getString("feeds", null), Array<Feed>::class.java)?.toList()
         }.getOrNull().orEmpty()
+        readIds = runCatching {
+            val type = object : TypeToken<Set<String>>() {}.type
+            gson.fromJson<Set<String>>(prefs.getString("read_ids", null), type)
+        }.getOrNull().orEmpty()
+    }
+
+    fun isRead(article: Article): Boolean = article.id in readIds
+
+    fun markRead(article: Article) {
+        if (article.id in readIds) return
+        readIds = readIds + article.id
+        prefs.edit().putString("read_ids", gson.toJson(readIds)).apply()
     }
 
     /** Fetch the feed once to confirm it parses and to read its title, then subscribe. */
@@ -85,8 +113,10 @@ class ReaderViewModel(application: Application) : AndroidViewModel(application) 
             runCatching { parser.getRssChannel(feed.url) }
                 .onSuccess { channel ->
                     articles = channel.items.map { item ->
+                        val title = item.title?.trim().orEmpty().ifBlank { "(untitled)" }
                         Article(
-                            title = item.title?.trim().orEmpty().ifBlank { "(untitled)" },
+                            id = item.guid ?: item.link ?: "${feed.url}#$title",
+                            title = title,
                             date = item.pubDate?.trim().orEmpty(),
                             body = htmlToText(item.content ?: item.description.orEmpty()),
                         )
