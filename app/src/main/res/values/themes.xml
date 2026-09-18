@@ -1,4 +1,4 @@
 <resources>
     <!-- MMD provides the composable theme; this is a minimal placeholder. -->
-    <style name="Theme.Reader" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.MonoReader" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>

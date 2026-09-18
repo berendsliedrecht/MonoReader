@@ -15,5 +15,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "eink-rssreader"
+rootProject.name = "MonoReader"
 include(":app")

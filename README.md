@@ -1,4 +1,4 @@
-# Reader
+# MonoReader
 
 Minimal RSS/Atom reader for the Mudita Kompakt (e-ink), built with the Mudita Mindful Design (MMD) framework. Subscribe to feeds by URL and read articles as clean, distraction-free text. No account, no images, no tracking.
 
