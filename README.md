@@ -37,6 +37,10 @@ Feeds are fetched and parsed with [RSS-Parser](https://github.com/prof18/RSS-Par
 - Requests use a browser-like User-Agent, since some servers reject the default OkHttp one.
 - Pinned to RSS-Parser 6.0.6, the last release built with Kotlin 1.9 (matching MMD's toolchain).
 
+## Support
+
+If you find this app useful, consider [sponsoring me](https://github.com/sponsors/berendsliedrecht).
+
 ## License
 
 [MIT](LICENSE)
