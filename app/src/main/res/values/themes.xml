@@ -1,4 +1,13 @@
 <resources>
     <!-- MMD provides the composable theme; this is a minimal placeholder. -->
-    <style name="Theme.MonoReader" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.MonoReader" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- Dark system bar icons on the app's white background. targetSdk 35
+             forces edge-to-edge on Android 15+, where the default light icons
+             are white-on-white and disappear. -->
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <!-- Pre-Android-15 (e.g. stock Kompakt): solid white bars. -->
+        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
+    </style>
 </resources>
