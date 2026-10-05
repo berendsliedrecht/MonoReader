@@ -32,6 +32,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    // Compress native libs: AGP 8.2 does not 16 KB-align uncompressed .so
+    // files, which makes newer Android builds show a compatibility dialog
+    // on debuggable apps. Compressed libs are exempt from the check.
+    packaging { jniLibs { useLegacyPackaging = true } }
 
     buildFeatures {
         compose = true
